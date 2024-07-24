@@ -8,16 +8,22 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     private Animator anim;
     public float speed;
+    public float speed2;
+    public float speed3;
     private bool grounded;
     private float horizontalInput;
+    //private bool jump;
     public GameObject manager;
     // Start is called before the first frame update
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        speed = 10;
+        speed = 7;
+        speed2 = 9;
+        speed3 = 3;
         grounded = false;
+        //jump = false;
         
     }
 
@@ -35,6 +41,7 @@ public class Player : MonoBehaviour
         //Debug.Log(grounded);
         anim.SetBool("Walking", horizontalInput != 0);
         anim.SetBool("Grounded", grounded);
+        //anim.SetBool("Jump", jump);
 
         if (transform.position.y < -10) {
             manager.GetComponent<Manager>().Restart();
@@ -46,12 +53,22 @@ public class Player : MonoBehaviour
         if (collision.gameObject.tag == "Ground") {
             grounded = true;
         }
+        if (collision.gameObject.tag == "Jump") {//mushroom jump
+            rb.velocity = new Vector2(rb.velocity.x, speed2);
+            grounded = false;
+        }
+        
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Flag") {
             manager.GetComponent<Manager>().Win();
+        }
+
+        if (collision.gameObject.tag == "Poison")
+        {
+            manager.GetComponent<Manager>().Restart();
         }
     }
 
