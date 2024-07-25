@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     private float horizontalInput;
     //private bool jump;
     public GameObject manager;
+    public GameObject doll;
     // Start is called before the first frame update
     void Awake()
     {
@@ -45,6 +46,7 @@ public class Player : MonoBehaviour
 
         if (transform.position.y < -10) {
             manager.GetComponent<Manager>().Restart();
+
         }
     }
 
@@ -56,6 +58,10 @@ public class Player : MonoBehaviour
         if (collision.gameObject.tag == "Jump") {//mushroom jump
             rb.velocity = new Vector2(rb.velocity.x, speed2);
             grounded = false;
+        }
+        if (collision.gameObject.tag == "Doll") {
+            collision.gameObject.SetActive(false);
+
         }
         
     }
@@ -69,6 +75,7 @@ public class Player : MonoBehaviour
         if (collision.gameObject.tag == "Poison")
         {
             manager.GetComponent<Manager>().Restart();
+            rb.velocity = new Vector2(rb.velocity.x, speed3);
         }
     }
 
