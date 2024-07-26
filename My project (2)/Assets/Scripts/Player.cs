@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-
+    public Transform newparent;
     private Rigidbody2D rb;
     private Animator anim;
     public float speed;
@@ -25,40 +25,52 @@ public class Player : MonoBehaviour
         speed3 = 1;
         grounded = false;
         //jump = false;
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
         horizontalInput = Input.GetAxis("Horizontal");
-        rb.velocity = new Vector2(horizontalInput*speed, rb.velocity.y);
-        if (Input.GetKeyDown(KeyCode.Space) && grounded) {
-            rb.velocity= new Vector2(rb.velocity.x, speed);
+        rb.velocity = new Vector2(horizontalInput * speed, rb.velocity.y);
+        if (Input.GetKeyDown(KeyCode.Space) && grounded)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, speed);
             grounded = false;
         }
-        if (horizontalInput > 0) { transform.localScale = new Vector3(1, 1, 1); }
-        else if (horizontalInput < 0) { transform.localScale = new Vector3(-1, 1, 1); }
+        if (horizontalInput > 0) { transform.localScale = new Vector3(3, 3, 3); }
+        else if (horizontalInput < 0) { transform.localScale = new Vector3(-3, 3, 3); }
         //Debug.Log(grounded);
         anim.SetBool("Walking", horizontalInput != 0);
         anim.SetBool("Grounded", grounded);
         //anim.SetBool("Jump", jump);
 
-        if (transform.position.y < -10) {
+        if (transform.position.y < -10)
+        {
             manager.GetComponent<Manager>().Restart();
 
         }
-       
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Ground") {
+        if (collision.gameObject.tag == "Ground")
+        {
             grounded = true;
         }
-        if (collision.gameObject.tag == "Doll") {
+        if (collision.gameObject.tag == "Small")
+        {
             collision.gameObject.SetActive(false);
-            rb.velocity = new Vector2(rb.velocity.x, speed3);
+            transform.localScale -= new Vector3(1, 1, 1);
+            //rb.velocity = new Vector2(rb.velocity.x, speed3);
+            grounded = true;
+        }
+        if (collision.gameObject.tag == "Big")
+        {
+            collision.gameObject.SetActive(false);
+            transform.localScale += new Vector3(1, 1, 1);
+            //rb.velocity = new Vector2(rb.velocity.x, speed3);
             grounded = true;
         }
         if (collision.gameObject.tag == "Broom")
@@ -66,13 +78,22 @@ public class Player : MonoBehaviour
             collision.gameObject.SetActive(false);
             rb.velocity = new Vector2(rb.velocity.x, speed2);
         }
-
+        if (collision.gameObject.tag == "Trick")
+        {
+            collision.gameObject.SetActive(false);
+            grounded = true;
+        }
+        /*if (collision.gameObject.tag == "Platform")
+        {
+            speed = speed + collision.gameObject.direction * collision.gameObject.speed;
+        }*/
 
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Flag") {
+        if (collision.gameObject.tag == "Flag")
+        {
             manager.GetComponent<Manager>().Win();
         }
 
@@ -85,7 +106,6 @@ public class Player : MonoBehaviour
             collision.gameObject.SetActive(false);
             ScoreManager.instance.AddPoint();
         }
+      
     }
-
-
 }

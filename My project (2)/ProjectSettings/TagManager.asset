@@ -8,7 +8,12 @@ TagManager:
   - Flag
   - Jump
   - Poison
-  - Doll
+  - Broom
+  - Diamond
+  - Platform
+  - Trick
+  - Big
+  - Small
   layers:
   - Default
   - TransparentFX
