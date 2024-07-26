@@ -20,9 +20,9 @@ public class Player : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        speed = 7;
+        speed = 6;
         speed2 = 9;
-        speed3 = 3;
+        speed3 = 1;
         grounded = false;
         //jump = false;
         
@@ -48,6 +48,7 @@ public class Player : MonoBehaviour
             manager.GetComponent<Manager>().Restart();
 
         }
+       
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -55,15 +56,18 @@ public class Player : MonoBehaviour
         if (collision.gameObject.tag == "Ground") {
             grounded = true;
         }
-        if (collision.gameObject.tag == "Jump") {//mushroom jump
-            rb.velocity = new Vector2(rb.velocity.x, speed2);
-            grounded = false;
-        }
         if (collision.gameObject.tag == "Doll") {
             collision.gameObject.SetActive(false);
-
+            rb.velocity = new Vector2(rb.velocity.x, speed3);
+            grounded = true;
         }
-        
+        if (collision.gameObject.tag == "Broom")
+        {
+            collision.gameObject.SetActive(false);
+            rb.velocity = new Vector2(rb.velocity.x, speed2);
+        }
+
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -75,7 +79,11 @@ public class Player : MonoBehaviour
         if (collision.gameObject.tag == "Poison")
         {
             manager.GetComponent<Manager>().Restart();
-            rb.velocity = new Vector2(rb.velocity.x, speed3);
+        }
+        if (collision.gameObject.tag == "Diamond")
+        {
+            collision.gameObject.SetActive(false);
+            ScoreManager.instance.AddPoint();
         }
     }
 
